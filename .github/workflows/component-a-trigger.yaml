@@ -1,0 +1,62 @@
+name: component-a
+
+on:
+  # Run on push to main branch
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/common-deploy.yaml"
+      - ".github/workflows/component-a-trigger.yaml"
+  # Run on pull request
+  pull_request:
+    paths:
+      - ".github/workflows/common-deploy.yaml"
+      - ".github/workflows/component-a-trigger.yaml"
+
+concurrency:
+  # Make sure every job on main has unique group id (run_id), so cancel-in-progress only affects PR's
+  # https://stackoverflow.com/questions/74117321/if-condition-in-concurrency-in-gha
+  group: ${{ github.workflow }}-${{ github.head_ref && github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read # for checkout
+  packages: write # for ghcr.io
+
+jobs:
+  development:
+    # Only run on pull request
+    if: |
+      (github.event_name == 'pull_request' )
+    uses: ./.github/workflows/common-deploy.yaml
+    secrets: inherit
+    with:
+      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/node:latest
+      ci_environment: development-env
+      component_path: ./component-a
+
+  staging:
+    # Only run on push to main branch
+    if: |
+      (github.event_name == 'push' && github.ref_name == 'main')
+    uses: ./.github/workflows/common-deploy.yaml
+    secrets: inherit
+    with:
+      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/node:latest
+      ci_environment: staging-env
+      component_path: ./component-a
+
+  production:
+    # Only run on push to main branch
+    if: |
+      (github.event_name == 'push' && github.ref_name == 'main')
+    needs: [staging]
+    uses: ./.github/workflows/common-deploy.yaml
+    secrets: inherit
+    with:
+      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/node:latest
+      ci_environment: production-env
+      component_path: ./component-a
+
+      run_test: false

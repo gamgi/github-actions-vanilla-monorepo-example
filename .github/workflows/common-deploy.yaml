@@ -37,7 +37,8 @@ on:
 
 permissions:
   contents: read # for checkout
-  id-token: write # for OIDC
+  packages: read # for ghcr.io
+  # id-token: write # for OIDC
 
 env:
   # Environment variables based on inputs
