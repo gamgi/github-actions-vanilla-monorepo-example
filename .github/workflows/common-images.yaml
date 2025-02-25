@@ -4,6 +4,13 @@ on:
   # Run on workflow call
   workflow_call:
     inputs:
+      # CI Context
+      ci_path:
+        description: 'Root path without trailing slash, eg. ./images'
+        required: true
+        type: string
+
+      # Image parameters
       image_file:
         description: 'Dockerfile'
         required: true
@@ -42,7 +49,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
-          context: ./images/
-          file: ./images/${{ inputs.image_file }}
+          context: ./${{ inputs.ci_path }}
+          file: ${{ inputs.ci_path }}/${{ inputs.image_file }}
           push: ${{ inputs.run_push }}
           tags: ghcr.io/${{ github.repository }}/${{ inputs.image_name }}:${{ inputs.image_tag }}

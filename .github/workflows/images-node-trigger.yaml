@@ -34,6 +34,7 @@ jobs:
     uses: ./.github/workflows/common-images.yaml
     secrets: inherit
     with:
+      ci_path: ./images
       image_file: node.Dockerfile
       image_name: node
       image_tag: dev
@@ -47,6 +48,7 @@ jobs:
     uses: ./.github/workflows/common-images.yaml
     secrets: inherit
     with:
+      ci_path: ./images
       image_file: node.Dockerfile
       image_name: node
       image_tag: latest
