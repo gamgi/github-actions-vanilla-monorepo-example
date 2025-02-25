@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  node:
+    build:
+      context: images/
+      dockerfile: node.Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/workspace:cached
+    command: sleep infinity
+    working_dir: /workspace
+
+  python:
+    build:
+      context: images/
+      dockerfile: python.Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/workspace:cached
+    command: sleep infinity
+    working_dir: /workspace
