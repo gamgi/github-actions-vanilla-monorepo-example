@@ -7,7 +7,7 @@ services:
     volumes:
       # - /var/run/docker.sock:/var/run/docker.sock
       - .:/workspace:cached
-    command: sleep infinity
+    command: bash
     working_dir: /workspace
 
   python:
@@ -18,7 +18,7 @@ services:
     volumes:
       # - /var/run/docker.sock:/var/run/docker.sock
       - .:/workspace:cached
-    command: sleep infinity
+    command: bash
     working_dir: /workspace
 
   basic:

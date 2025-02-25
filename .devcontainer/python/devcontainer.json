@@ -1,0 +1,12 @@
+{
+  "name": "python",
+  "dockerComposeFile": "../../docker-compose.yaml",
+  "service": "python",
+  "runServices": ["python"],
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "overrideCommand": true,
+  "features": {
+      "ghcr.io/devcontainers/features/common-utils:2": {}
+  }
+}
