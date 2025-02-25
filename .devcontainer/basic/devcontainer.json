@@ -1,0 +1,7 @@
+{
+  "name": "basic",
+  "dockerComposeFile": "../../docker-compose.yaml",
+  "service": "basic",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose"
+}

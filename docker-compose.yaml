@@ -5,8 +5,9 @@ services:
     build:
       context: images/
       dockerfile: node.Dockerfile
+    tty: true
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      # - /var/run/docker.sock:/var/run/docker.sock
       - .:/workspace:cached
     command: sleep infinity
     working_dir: /workspace
@@ -15,8 +16,16 @@ services:
     build:
       context: images/
       dockerfile: python.Dockerfile
+    tty: true
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      # - /var/run/docker.sock:/var/run/docker.sock
       - .:/workspace:cached
     command: sleep infinity
+    working_dir: /workspace
+
+  basic:
+    image: mcr.microsoft.com/devcontainers/base:debian
+    tty: true
+    volumes:
+      - .:/workspace:cached
     working_dir: /workspace
