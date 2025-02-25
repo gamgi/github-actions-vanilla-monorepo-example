@@ -32,9 +32,9 @@ jobs:
     uses: ./.github/workflows/common-deploy.yaml
     secrets: inherit
     with:
-      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/node:latest
+      ci_path: ./component-a
       ci_environment: development-env
-      component_path: ./component-a
+      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/node:latest
 
   staging:
     # Only run on push to main branch
@@ -43,9 +43,9 @@ jobs:
     uses: ./.github/workflows/common-deploy.yaml
     secrets: inherit
     with:
-      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/node:latest
+      ci_path: ./component-a
       ci_environment: staging-env
-      component_path: ./component-a
+      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/node:latest
 
   production:
     # Only run on push to main branch
@@ -55,8 +55,8 @@ jobs:
     uses: ./.github/workflows/common-deploy.yaml
     secrets: inherit
     with:
-      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/node:latest
+      ci_path: ./component-a
       ci_environment: production-env
-      component_path: ./component-a
+      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/node:latest
 
       run_test: false
