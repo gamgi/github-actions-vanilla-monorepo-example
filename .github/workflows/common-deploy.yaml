@@ -44,6 +44,7 @@ env:
   # Environment variables based on inputs
   COMPONENT_PATH: ${{ inputs.component_path }}
   ENV: ${{ (contains(inputs.ci_environment,'development') && 'dev') || (contains(inputs.ci_environment, 'staging') && 'stag') || (contains(inputs.ci_environment, 'production') && 'prod') }}
+  ENVIRONMENT: ${{ (contains(inputs.ci_environment,'development') && 'development') || (contains(inputs.ci_environment, 'staging') && 'staging') || (contains(inputs.ci_environment, 'production') && 'production') }}
 
   # Environment variables based on GitHub environment
   # AWS_ROLE: ${{ vars.AWS_ROLE }}
