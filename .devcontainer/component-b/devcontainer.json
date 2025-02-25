@@ -1,0 +1,9 @@
+{
+  "name": "component-b",
+  "build": {
+    "dockerfile": "../../images/python.Dockerfile",
+    "context": "../../images/"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder}/component-b,target=/workspace,type=bind,consistency=cached",
+  "workspaceFolder": "/workspace"
+}
