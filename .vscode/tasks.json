@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+	  {
+      "label": "Run lint.sh for current component",
+      "type": "shell",
+      "command": "bash",
+      "args": ["-c", "cd ${workspaceFolder} && echo \"${relativeFileDirname}\" | cut -d \"/\" -f1 | xargs -I {} bash \"{}/scripts/lint.sh\" dev;"],
+      "problemMatcher": []
+    }
+	]
+}
