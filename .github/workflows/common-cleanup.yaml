@@ -1,4 +1,5 @@
 name: common-cleanup
+# This workflow takes care of removing inactive deployments from the PR timeline
 
 on:
   # Run after a workflow completes

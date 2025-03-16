@@ -1,4 +1,5 @@
 name: component-b
+# This workflow is the entry-point for all workflows of component b
 
 on:
   # Run on push to main branch
@@ -6,11 +7,13 @@ on:
     branches:
       - main
     paths:
+      - "component-b/"
       - ".github/workflows/common-deploy.yaml"
       - ".github/workflows/component-b-trigger.yaml"
   # Run on pull request
   pull_request:
     paths:
+      - "component-b/"
       - ".github/workflows/common-deploy.yaml"
       - ".github/workflows/component-b-trigger.yaml"
 
@@ -34,7 +37,7 @@ jobs:
     with:
       ci_path: ./component-b
       ci_environment: development-env
-      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/python:latest
+      ci_image: ghcr.io/${{ github.repository }}/python:latest
 
       run_lint: true
       run_test: false
@@ -49,7 +52,7 @@ jobs:
     with:
       ci_path: ./component-b
       ci_environment: staging-env
-      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/python:latest
+      ci_image: ghcr.io/${{ github.repository }}/python:latest
 
       run_lint: false
       run_test: false
@@ -65,7 +68,7 @@ jobs:
     with:
       ci_path: ./component-b
       ci_environment: production-env
-      ci_image: ghcr.io/gamgi/github-actions-vanilla-monorepo-example/python:latest
+      ci_image: ghcr.io/${{ github.repository }}/python:latest
 
       run_lint: false
       run_test: false

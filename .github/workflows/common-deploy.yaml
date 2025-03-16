@@ -1,5 +1,5 @@
 name: common-deploy
-run-name: Deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
+# This workflow defines setup steps, as well as a common steps for all deployment jobs
 
 on:
   # Run on workflow call
@@ -7,7 +7,7 @@ on:
     inputs:
       # CI Context
       ci_path:
-        description: 'Root path without trailing slash, eg. ./my-component'
+        description: 'Working directory without trailing slash, eg. ./my-component'
         required: true
         type: string
       ci_environment:
@@ -15,7 +15,7 @@ on:
         required: true
         type: string
       ci_image:
-        description: 'CI base image, eg. node:23'
+        description: 'Container image, eg. node:23'
         required: true
         type: string
 
