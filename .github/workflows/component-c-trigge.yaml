@@ -7,16 +7,17 @@ on:
     branches:
       - main
     paths:
-      - "component-c/"
+      - "component-c/**"
       - ".github/workflows/common-deploy.yaml"
       - ".github/workflows/component-c-trigger.yaml"
-      - "images/python.Dockerfile"
+      - '!**/*.md'
   # Run on pull request
   pull_request:
     paths:
-      - "component-c/"
+      - "component-c/**"
       - ".github/workflows/common-deploy.yaml"
       - ".github/workflows/component-c-trigger.yaml"
+      - '!**/*.md'
   # Run on manual trigger (for testing changes to images)
   workflow_dispatch:
     inputs:

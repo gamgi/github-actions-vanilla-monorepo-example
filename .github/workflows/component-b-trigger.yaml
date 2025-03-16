@@ -7,15 +7,17 @@ on:
     branches:
       - main
     paths:
-      - "component-b/"
+      - "component-b/**"
       - ".github/workflows/common-deploy.yaml"
       - ".github/workflows/component-b-trigger.yaml"
+      - '!**/*.md'
   # Run on pull request
   pull_request:
     paths:
-      - "component-b/"
+      - "component-b/**"
       - ".github/workflows/common-deploy.yaml"
       - ".github/workflows/component-b-trigger.yaml"
+      - '!**/*.md'
 
 concurrency:
   # Make sure every job on main has unique group id (run_id), so cancel-in-progress only affects PR's
