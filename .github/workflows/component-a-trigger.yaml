@@ -8,14 +8,12 @@ on:
       - main
     paths:
       - "component-a/**"
-      - ".github/workflows/common-deploy.yaml"
       - ".github/workflows/component-a-trigger.yaml"
       - '!**/*.md'
   # Run on pull request
   pull_request:
     paths:
       - "component-a/**"
-      - ".github/workflows/common-deploy.yaml"
       - ".github/workflows/component-a-trigger.yaml"
       - '!**/*.md'
 
@@ -28,6 +26,7 @@ concurrency:
 permissions:
   contents: read # for checkout
   packages: write # for ghcr.io
+  # id-token: write # for AWS OIDC
 
 jobs:
   development:

@@ -35,11 +35,12 @@ jobs:
     secrets: inherit
     with:
       ci_path: ./images
+      ci_test_path: ./component-b
       image_file: python.Dockerfile
       image_name: python
       image_tag: dev
 
-      run_push: false
+      run_test: true
 
   production:
     # Only run on push to main branch
@@ -53,4 +54,4 @@ jobs:
       image_name: python
       image_tag: latest
 
-      run_push: true
+      run_test: false

@@ -21,23 +21,20 @@ on:
 
       # CI Jobs to run
       run_lint:
-        required: false
-        default: true
+        required: true
         type: boolean
       run_test:
-        required: false
-        default: true
+        required: true
         type: boolean
       run_deploy:
-        required: false
-        default: true
+        required: true
         type: boolean
 
 
 permissions:
   contents: read # for checkout
   packages: read # for ghcr.io
-  # id-token: write # for OIDC
+  # id-token: write # for AWS OIDC
 
 env:
   # Environment variables based on inputs

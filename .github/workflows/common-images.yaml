@@ -1,5 +1,5 @@
 name: common-images
-# This workflow defines setup steps, as well as a common steps for all image jobs
+# This workflow defines common steps for all image jobs
 
 on:
   # Run on workflow call
@@ -9,6 +9,10 @@ on:
       ci_path:
         description: 'Working directory without trailing slash, eg. ./images'
         required: true
+        type: string
+      ci_test_path:
+        description: 'Working directory without trailing slash for test step, eg. ./images'
+        required: false
         type: string
 
       # Image parameters
@@ -24,18 +28,23 @@ on:
         description: 'Image tag'
         required: true
         type: string
-      run_push:
-        description: 'Whether to push image to ghcr.io'
+
+      run_test:
         required: true
-        default: true
         type: boolean
+
 
 permissions:
   contents: read # for checkout
   packages: write # for ghcr.io
 
 jobs:
-  build:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "no-op"
+
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -53,5 +62,22 @@ jobs:
         with:
           context: ./${{ inputs.ci_path }}
           file: ${{ inputs.ci_path }}/${{ inputs.image_file }}
-          push: ${{ inputs.run_push }}
+          push: true
           tags: ghcr.io/${{ github.repository }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
+
+  test:
+    # Only run if previous non-skipped jobs passed
+    if: ${{ !failure() && !cancelled() && inputs.run_test }}
+    needs: [lint, deploy]
+
+    uses: ./.github/workflows/common-deploy.yaml
+    secrets: inherit
+    with:
+      # we run the common-deploy workflow for a component to test the built image
+      ci_path: ${{ inputs.ci_test_path }}
+      ci_environment: development-env
+      ci_image: ghcr.io/${{ github.repository }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
+
+      run_lint: true
+      run_test: true
+      run_deploy: false
