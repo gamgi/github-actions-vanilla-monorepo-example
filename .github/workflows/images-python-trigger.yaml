@@ -35,12 +35,29 @@ jobs:
     secrets: inherit
     with:
       ci_path: ./images
-      ci_test_path: ./component-b
       image_file: python.Dockerfile
       image_name: python
       image_tag: dev
 
+  # the test job is defined separately, since we use the common-deploy workflow ...
+  development-test:
+    # ... so we use workaround to ensure job is named 'development / test'
+    name: 'development'
+
+    # Only run if previous non-skipped jobs passed
+    needs: [development]
+
+    uses: ./.github/workflows/common-deploy.yaml
+    secrets: inherit
+    with:
+      # we run the common-deploy workflow for a component to test the image built above
+      ci_path: ./component-b
+      ci_environment: development-env
+      ci_image: ghcr.io/${{ github.repository }}/python:dev
+
+      run_lint: true
       run_test: true
+      run_deploy: false
 
   production:
     # Only run on push to main branch
@@ -53,5 +70,3 @@ jobs:
       image_file: python.Dockerfile
       image_name: python
       image_tag: latest
-
-      run_test: false
