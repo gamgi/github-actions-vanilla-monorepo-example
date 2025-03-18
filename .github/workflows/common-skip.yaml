@@ -1,0 +1,33 @@
+name: common-skip
+# This workflow defines no-op jobs for some files. These are required
+# so we can ebable required checks for GitHub protected branches.
+
+on:
+  # Run on push to main branch
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.md'
+      - ".github/workflows/common-deploy.yaml"
+  # Run on pull request
+  pull_request:
+    paths:
+      - '**/*.md'
+      - ".github/workflows/common-deploy.yaml"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "no-op"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "no-op"
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "no-op"
