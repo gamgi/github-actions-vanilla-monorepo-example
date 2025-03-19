@@ -1,4 +1,4 @@
-name: common-images
+name: common-deploy-images
 # This workflow defines common steps for all image jobs
 
 on:

@@ -6,13 +6,13 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/common-images.yaml"
+      - ".github/workflows/common-deploy-images.yaml"
       - ".github/workflows/images-python-trigger.yaml"
       - "images/python.Dockerfile"
   # Run on pull request
   pull_request:
     paths:
-      - ".github/workflows/common-images.yaml"
+      - ".github/workflows/common-deploy-images.yaml"
       - ".github/workflows/images-python-trigger.yaml"
       - "images/python.Dockerfile"
 
@@ -31,7 +31,7 @@ jobs:
     # Only run on pull request
     if: |
       (github.event_name == 'pull_request' )
-    uses: ./.github/workflows/common-images.yaml
+    uses: ./.github/workflows/common-deploy-images.yaml
     secrets: inherit
     with:
       ci_path: ./images
@@ -63,7 +63,7 @@ jobs:
     # Only run on push to main branch
     if: |
       (github.event_name == 'push' && github.ref_name == 'main')
-    uses: ./.github/workflows/common-images.yaml
+    uses: ./.github/workflows/common-deploy-images.yaml
     secrets: inherit
     with:
       ci_path: ./images
