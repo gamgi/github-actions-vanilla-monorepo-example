@@ -38,7 +38,6 @@ permissions:
 
 env:
   # Environment variables based on inputs
-  COMPONENT_PATH: ${{ inputs.ci_path }}
   ENV: ${{ (contains(inputs.ci_environment,'development') && 'dev') || (contains(inputs.ci_environment, 'staging') && 'stag') || (contains(inputs.ci_environment, 'production') && 'prod') }}
   ENVIRONMENT: ${{ (contains(inputs.ci_environment,'development') && 'development') || (contains(inputs.ci_environment, 'staging') && 'staging') || (contains(inputs.ci_environment, 'production') && 'production') }}
 
@@ -64,7 +63,7 @@ jobs:
       #     aws-region: ${{ env.AWS_REGION }}
       - name: Lint
         run: ./scripts/lint.sh ${{ env.ENV }}
-        working-directory: ${{ env.COMPONENT_PATH }}
+        working-directory: ${{ inputs.ci_path }}
 
   test:
     if: ${{ inputs.run_test }}
@@ -83,7 +82,7 @@ jobs:
       #     aws-region: ${{ env.AWS_REGION }}
       - name: Run unit tests
         run: ./scripts/test.sh ${{ env.ENV }}
-        working-directory: ${{ env.COMPONENT_PATH }}
+        working-directory: ${{ inputs.ci_path }}
 
   deploy:
     # Only run if previous non-skipped jobs passed
@@ -104,4 +103,4 @@ jobs:
       #     aws-region: ${{ env.AWS_REGION }}
       - name: Run deploy
         run: ./scripts/deploy.sh ${{ env.ENV }}
-        working-directory: ${{ env.COMPONENT_PATH }}
+        working-directory: ${{ inputs.ci_path }}
