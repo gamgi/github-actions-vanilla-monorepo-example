@@ -1,4 +1,4 @@
-name: common-skip
+name: common-deploy-skip
 # This workflow defines no-op jobs for some files. These are required
 # so we can ebable required checks for GitHub protected branches.
 
