@@ -7,6 +7,5 @@
   "shutdownAction": "stopCompose",
   "overrideCommand": true,
   "features": {
-      "ghcr.io/devcontainers/features/common-utils:2": {}
   }
 }
