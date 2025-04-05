@@ -21,6 +21,12 @@ This repo is the basis for a blog post.
 * Development environment that shares tool versions with CI (devcontainers)
 * Deployment to multiple environments (development, staging, production)
 
+## Demo
+
+* [PR](https://github.com/gamgi/github-actions-vanilla-monorepo-example/pull/3) demonstrating changes to a component
+* [PR](https://github.com/gamgi/github-actions-vanilla-monorepo-example/pull/4) demonstrating changes to CI base image
+* Open the repo in devcontainer or using GitHub Codespaces
+
 ## High level overview
 
 The codebase is organized into components on the root level.
