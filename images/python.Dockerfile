@@ -8,7 +8,7 @@ RUN apt-get update && apt-get -qq update && apt-get install -qq -y \
     && apt-get autoremove -y && apt-get clean
 
 # install language specific tools
-COPY --from=ghcr.io/astral-sh/uv:0.6.3 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.6.7 /uv /uvx /bin/
 ENV UV_LINK_MODE=copy
 ENV UV_PYTHON=python3.12
 
