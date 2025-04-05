@@ -1,0 +1,72 @@
+name: images-python
+
+on:
+  # Run on push to main branch
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/common-deploy-images.yaml"
+      - ".github/workflows/images-python-trigger.yaml"
+      - "images/python.Dockerfile"
+  # Run on pull request
+  pull_request:
+    paths:
+      - ".github/workflows/common-deploy-images.yaml"
+      - ".github/workflows/images-python-trigger.yaml"
+      - "images/python.Dockerfile"
+
+concurrency:
+  # Make sure every job on main has unique group id (run_id), so cancel-in-progress only affects PR's
+  # https://stackoverflow.com/questions/74117321/if-condition-in-concurrency-in-gha
+  group: ${{ github.workflow }}-${{ github.head_ref && github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read # for checkout
+  packages: write # for ghcr.io
+
+jobs:
+  development:
+    # Only run on pull request
+    if: |
+      (github.event_name == 'pull_request' )
+    uses: ./.github/workflows/common-deploy-images.yaml
+    secrets: inherit
+    with:
+      ci_path: ./images
+      image_file: python.Dockerfile
+      image_name: python
+      image_tag: dev
+
+  # the test job is defined separately, since we use the common-deploy workflow ...
+  development-test:
+    # ... so we use workaround to ensure job is named 'development / test'
+    name: 'development'
+
+    # Only run if previous non-skipped jobs passed
+    needs: [development]
+
+    uses: ./.github/workflows/common-deploy.yaml
+    secrets: inherit
+    with:
+      # we run the common-deploy workflow for a component to test the image built above
+      ci_path: ./component-b
+      ci_environment: development-env
+      ci_image: ghcr.io/${{ github.repository }}/python:dev
+
+      run_lint: true
+      run_test: true
+      run_deploy: false
+
+  production:
+    # Only run on push to main branch
+    if: |
+      (github.event_name == 'push' && github.ref_name == 'main')
+    uses: ./.github/workflows/common-deploy-images.yaml
+    secrets: inherit
+    with:
+      ci_path: ./images
+      image_file: python.Dockerfile
+      image_name: python
+      image_tag: latest

@@ -1,0 +1,58 @@
+name: common-deploy-images
+# This workflow defines common steps for all image jobs
+
+on:
+  # Run on workflow call
+  workflow_call:
+    inputs:
+      # CI Context
+      ci_path:
+        description: 'Working directory without trailing slash, eg. ./images'
+        required: true
+        type: string
+
+      # Image parameters
+      image_file:
+        description: 'Dockerfile relative to working directory, eg. node.Dockerfile'
+        required: true
+        type: string
+      image_name:
+        description: 'Image name'
+        required: true
+        type: string
+      image_tag:
+        description: 'Image tag'
+        required: true
+        type: string
+
+
+permissions:
+  contents: read # for checkout
+  packages: write # for ghcr.io
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "no-op"
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }} # automatically generated
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./${{ inputs.ci_path }}
+          file: ${{ inputs.ci_path }}/${{ inputs.image_file }}
+          push: true
+          tags: ghcr.io/${{ github.repository }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
