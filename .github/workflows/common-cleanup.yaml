@@ -1,0 +1,29 @@
+name: common-cleanup
+# This workflow takes care of removing inactive deployments from the PR timeline
+
+on:
+  # Run after a workflow completes
+  workflow_run:
+    types: [completed]
+    workflows:
+      - '*'
+      - '!common-cleanup'
+
+permissions:
+  contents: read # for checkout
+  deployments: write # for deleting deployments
+
+concurrency:
+  # Make sure every job has shared group id
+  group: ${{ github.workflow }}-shared
+  cancel-in-progress: true
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Delete inactive GitHub deployments
+        uses: ./.github/actions/delete-deployments
