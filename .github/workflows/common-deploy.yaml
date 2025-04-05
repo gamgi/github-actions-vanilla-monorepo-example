@@ -1,0 +1,106 @@
+name: common-deploy
+# This workflow defines setup steps, as well as a common steps for all deployment jobs
+
+on:
+  # Run on workflow call
+  workflow_call:
+    inputs:
+      # CI Context
+      ci_path:
+        description: 'Working directory without trailing slash, eg. ./my-component'
+        required: true
+        type: string
+      ci_environment:
+        description: 'GitHub deployment environment, eg. development-env'
+        required: true
+        type: string
+      ci_image:
+        description: 'Container image, eg. node:23'
+        required: true
+        type: string
+
+      # CI Jobs to run
+      run_lint:
+        required: true
+        type: boolean
+      run_test:
+        required: true
+        type: boolean
+      run_deploy:
+        required: true
+        type: boolean
+
+
+permissions:
+  contents: read # for checkout
+  packages: read # for ghcr.io
+  # id-token: write # for AWS OIDC
+
+env:
+  # Environment variables based on inputs
+  ENV: ${{ (contains(inputs.ci_environment,'development') && 'dev') || (contains(inputs.ci_environment, 'staging') && 'stag') || (contains(inputs.ci_environment, 'production') && 'prod') }}
+  ENVIRONMENT: ${{ (contains(inputs.ci_environment,'development') && 'development') || (contains(inputs.ci_environment, 'staging') && 'staging') || (contains(inputs.ci_environment, 'production') && 'production') }}
+
+  # Environment variables based on GitHub environment
+  # AWS_ROLE: ${{ vars.AWS_ROLE }}
+  # AWS_REGION: ${{ vars.AWS_REGION }}
+
+jobs:
+  lint:
+    if: ${{ inputs.run_lint }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ci_environment }}
+    container:
+      image: ${{ inputs.ci_image }}
+
+    steps:
+      - uses: actions/checkout@v4
+      # - name: Assume AWS role
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ env.AWS_ROLE }}
+      #     role-session-name: github-actions-oidc-session
+      #     aws-region: ${{ env.AWS_REGION }}
+      - name: Lint
+        run: ./scripts/lint.sh ${{ env.ENV }}
+        working-directory: ${{ inputs.ci_path }}
+
+  test:
+    if: ${{ inputs.run_test }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ci_environment }}
+    container:
+      image: ${{ inputs.ci_image }}
+
+    steps:
+      - uses: actions/checkout@v4
+      # - name: Assume AWS role
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ env.AWS_ROLE }}
+      #     role-session-name: github-actions-oidc-session
+      #     aws-region: ${{ env.AWS_REGION }}
+      - name: Run unit tests
+        run: ./scripts/test.sh ${{ env.ENV }}
+        working-directory: ${{ inputs.ci_path }}
+
+  deploy:
+    # Only run if previous non-skipped jobs passed
+    if: ${{ !failure() && !cancelled() && inputs.run_deploy }}
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ci_environment }}
+    container:
+      image: ${{ inputs.ci_image }}
+
+    steps:
+      - uses: actions/checkout@v4
+      # - name: Assume AWS role
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ env.AWS_ROLE }}
+      #     role-session-name: github-actions-oidc-session
+      #     aws-region: ${{ env.AWS_REGION }}
+      - name: Run deploy
+        run: ./scripts/deploy.sh ${{ env.ENV }}
+        working-directory: ${{ inputs.ci_path }}
